@@ -27,7 +27,7 @@ class IOWriter(hadoopConf: Configuration, dataDir: String) extends IOTestBase(ha
     val buffer: Array[Byte] = Array.tabulate[Byte](bufferSize)(i => ('0' + i % 50).toByte)
     val filePath = new Path(dataDir, fileName.toString)
 
-    logger.info("Creating file {} with size {}", filePath.toString, fileSize.toString)
+    IOTestBase.logger.info("Creating file {} with size {}", filePath.toString, fileSize.toString)
 
     val out = fs.create(filePath, true, bufferSize)
 
@@ -40,7 +40,7 @@ class IOWriter(hadoopConf: Configuration, dataDir: String) extends IOTestBase(ha
       out.close()
     }
 
-    logger.info("File {} created with size {}", fileName, fileSize.toString)
+    IOTestBase.logger.info("File {} created with size {}", fileName, fileSize.toString)
 
     fileSize
 

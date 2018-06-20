@@ -8,6 +8,8 @@ lazy val dfsio = project
   .settings(
     name := "spark-benchmarks-dfsio",
     buildInfoPackage := "com.bbva.spark.benchmarks.dfsio",
+    scalaVersion := "2.10.7",
+    scalaHome := Some(file("C:\\tools\\scala-2.10.7")),
     Dependencies.Spark,
     Dependencies.Scopt,
     Dependencies.Alluxio

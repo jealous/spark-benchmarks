@@ -19,15 +19,16 @@ package com.bbva.spark.benchmarks.dfsio
 import java.io.{BufferedWriter, FileWriter, PrintWriter}
 import java.util.Date
 
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.scalalogging.slf4j.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.{LongWritable, SequenceFile, Text}
 import org.apache.hadoop.io.SequenceFile.{CompressionType, Writer}
 import org.apache.hadoop.io.compress._
-import org.apache.log4j.{Level, Logger}
+import org.apache.log4j.Level
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+import org.slf4j.LoggerFactory
 
 /**
   * Distributed I/O benchmark.
@@ -36,13 +37,14 @@ import org.apache.spark.{SparkConf, SparkContext}
   * is also specified as a parameter to the test. By default, each file is accessed in a separate spark task.
   *
   */
-object TestDFSIO extends App with LazyLogging {
+object TestDFSIO extends App {
+  @transient lazy val logger = Logger(LoggerFactory.getLogger("TestDFSIO"))
 
   val BaseFileName = "test_io_"
   val ControlDir = "io_control"
   val DataDir = "io_data"
 
-  Logger.getLogger("akka").setLevel(Level.WARN)
+  org.apache.log4j.Logger.getLogger("akka").setLevel(Level.WARN)
   //Logger.getLogger("org").setLevel(Level.WARN)
 
   TestDFSIOConfParser.parseAndRun(args) { conf =>

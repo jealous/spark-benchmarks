@@ -16,15 +16,19 @@
 
 package com.bbva.spark.benchmarks.dfsio
 
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.scalalogging.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.SerializableWritable
 import org.apache.spark.rdd.RDD
 
-abstract class IOTestBase(hadoopConf: Configuration, dataDir: String) extends Serializable with LazyLogging {
+object IOTestBase extends Serializable {
+  @transient lazy val logger = Logger(LoggerFactory.getLogger("IOTestBase"))
+}
 
+abstract class IOTestBase(hadoopConf: Configuration, dataDir: String) extends Serializable  {
   protected val DefaultBufferSize: Int = 100000
   protected val wrappedConf = new SerializableWritable(hadoopConf)
 
@@ -57,9 +61,9 @@ abstract class IOTestBase(hadoopConf: Configuration, dataDir: String) extends Se
 
     val ioRateMbSec: Float = totalSize.toFloat * 1000 / (execTime * 0x100000) // MEGA in hexadecimal = 0x100000
 
-    logger.info("Number of bytes processed = {}", totalSize)
-    logger.info("Exec time = {}", execTime)
-    logger.info("IO rate = {}", ioRateMbSec)
+    IOTestBase.logger.info(s"Number of bytes processed = $totalSize")
+    IOTestBase.logger.info(s"Exec time = $execTime")
+    IOTestBase.logger.info(s"IO rate = $ioRateMbSec")
 
     Stats(tasks = 1, size = totalSize, time = execTime, rate = ioRateMbSec * 1000,
       sqRate = ioRateMbSec * ioRateMbSec * 1000)

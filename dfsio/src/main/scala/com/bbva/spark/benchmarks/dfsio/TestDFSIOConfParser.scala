@@ -16,7 +16,8 @@
 
 package com.bbva.spark.benchmarks.dfsio
 
-import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.scalalogging.slf4j.Logger
+import org.slf4j.LoggerFactory
 import scopt.OptionParser
 
 sealed trait TestMode { def command: String }
@@ -33,7 +34,8 @@ case class TestDFSIOConf(mode: TestMode = NotDefined,
                          bufferSize: Int = 1048576,
                          hadoopExtraProps: Map[String, String] = Map.empty[String, String])
 
-object TestDFSIOConfParser extends LazyLogging {
+object TestDFSIOConfParser {
+  @transient private lazy val logger = Logger(LoggerFactory.getLogger("IOTestBase"))
 
   private lazy val parser = new OptionParser[TestDFSIOConf]("TestDFSIO") {
 
@@ -154,17 +156,17 @@ object TestDFSIOConfParser extends LazyLogging {
     logger.info("Test mode = {}", conf.mode.command)
     conf.mode match {
       case Write =>
-        logger.info("outputDir = {}", conf.benchmarkDir)
-        logger.info("resFile = {}", conf.resFileName)
-        logger.info("numFiles = {}", conf.numFiles)
-        logger.info("fileSize = {}", conf.fileSize)
-        logger.info("bufferSize = {}", conf.bufferSize)
+        logger.info(s"outputDir = ${conf.benchmarkDir}")
+        logger.info(s"resFile = ${conf.resFileName}")
+        logger.info(s"numFiles = ${conf.numFiles}")
+        logger.info(s"fileSize = ${conf.fileSize}")
+        logger.info(s"bufferSize = ${conf.bufferSize}")
       case Read =>
-        logger.info("inputDir = {}", conf.benchmarkDir)
-        logger.info("resFile = {}", conf.resFileName)
-        logger.info("numFiles = {}", conf.numFiles)
-        logger.info("fileSize = {}", conf.fileSize)
-        logger.info("bufferSize = {}", conf.bufferSize)
+        logger.info(s"inputDir = ${conf.benchmarkDir}")
+        logger.info(s"resFile = ${conf.resFileName}")
+        logger.info(s"numFiles = ${conf.numFiles}")
+        logger.info(s"fileSize = ${conf.fileSize}")
+        logger.info(s"bufferSize = ${conf.bufferSize}")
       case Clean =>
         logger.info("outputDir = {}", conf.benchmarkDir)
       case _ => // ignore
